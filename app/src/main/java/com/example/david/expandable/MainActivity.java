@@ -4,7 +4,8 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -41,6 +42,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.preferencias:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     class ListaAlbum extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
         @Override
@@ -70,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.dismiss();
             }
             if (json != null) {
-                Toast.makeText(MainActivity.this, json.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, json.toString(), Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(MainActivity.this, "JSON Array nulo", Toast.LENGTH_LONG).show();
             }
@@ -97,13 +115,12 @@ public class MainActivity extends AppCompatActivity {
                 expandableListDetail = new HashMap<String, List<String>>();
                 for(int i=0; i<arrayAlbumes.size(); i++){
                     if(expandableListDetail.containsKey(arrayAlbumes.get(i).getArtista())){
-                        expandableListDetail.get(arrayAlbumes.get(i).getArtista()).add(arrayAlbumes.get(i).getNombre());
+                        expandableListDetail.get(arrayAlbumes.get(i).getArtista()).add(arrayAlbumes.get(i).getNombre() + " (" +  + arrayAlbumes.get(i).getAño() + ")");
                     }else{
                         cabeceras.add(arrayAlbumes.get(i).getArtista());
                         expandableListDetail.put(arrayAlbumes.get(i).getArtista(), new ArrayList<String>());
-                        expandableListDetail.get(arrayAlbumes.get(i).getArtista()).add(arrayAlbumes.get(i).getNombre());
+                        expandableListDetail.get(arrayAlbumes.get(i).getArtista()).add(arrayAlbumes.get(i).getNombre() + " (" +  + arrayAlbumes.get(i).getAño() + ")");
                     }
-
                 }
                 rellenaExpandable();
 
