@@ -5,6 +5,7 @@
     <item
         android:id="@+id/preferencias"
         android:title="Preferencias"
+        android:icon="@android:drawable/ic_menu_preferences"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 </menu>

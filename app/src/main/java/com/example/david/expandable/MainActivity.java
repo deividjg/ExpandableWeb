@@ -1,7 +1,10 @@
 package com.example.david.expandable;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,27 +22,29 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private String IP_Server = "iesayala.ddns.net/deividjg";
-    private String url_consulta = "http://"+IP_Server+"/php.php";
+    private String IP_Server, ficheroPHP, sentenciaSQL, url_consulta;
     private JSONArray jSONArray;
     private JSONObject jsonObject;
     private DevuelveJSON devuelveJSON;
     private ArrayList<Album> arrayAlbumes;
 
-    ExpandableListView expandableListView;
-    ExpandableListAdapter expandableListAdapter;
-    List<String> expandableListTitle;
-    HashMap<String, List<String>> expandableListDetail;
-    ArrayList<String> cabeceras;
+    private ExpandableListView expandableListView;
+    private ExpandableListAdapter expandableListAdapter;
+    private List<String> expandableListTitle;
+    private HashMap<String, List<String>> expandableListDetail;
+    private ArrayList<String> cabeceras;
+
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        cargarPreferencias();
+        url_consulta = "http://" + IP_Server + "/" + ficheroPHP;
         devuelveJSON = new DevuelveJSON();
         new ListaAlbum().execute();
-
     }
 
     @Override
@@ -52,12 +57,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.preferencias:
-                break;
+                Intent i = new Intent(this,Preference.class);
+                startActivity(i);
         }
-
         return super.onOptionsItemSelected(item);
     }
-
 
     class ListaAlbum extends AsyncTask<String, String, JSONArray> {
         private ProgressDialog pDialog;
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         protected JSONArray doInBackground(String... args) {
             try {
                 HashMap<String, String> parametrosPost = new HashMap<>();
-                parametrosPost.put("ins_sql","Select * from ARTISTAS, ALBUMES WHERE ARTISTAS.ID_ARTISTA = ALBUMES.ID_ARTISTA_FK");
+                parametrosPost.put("ins_sql", sentenciaSQL);
                 jSONArray = devuelveJSON.sendRequest(url_consulta, parametrosPost);
                 if (jSONArray != null) {
                     return jSONArray;
@@ -130,11 +134,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void rellenaExpandable(){
+    protected void rellenaExpandable(){
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListAdapter = new Adaptador(this, cabeceras, expandableListDetail);
         expandableListView.setAdapter(expandableListAdapter);
+    }
 
+    protected void cargarPreferencias () {
+        sp = getSharedPreferences("com.example.david.expandable_preferences", MODE_PRIVATE);
+        IP_Server = sp.getString("ip","iesayala.ddns.net/deividjg");
+        ficheroPHP = sp.getString("ficheroPHP", "php.php");
+        sentenciaSQL = sp.getString("sentenciaSQL", "SELECT * FROM ARTISTAS, ALBUMES WHERE ARTISTAS.ID_ARTISTA = ALBUMES.ID_ARTISTA_FK");
     }
 }
 

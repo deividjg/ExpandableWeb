@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <EditTextPreference
+        android:key="ip"
+        android:title="IP"
+        android:summary="Indicar IP"
+        android:defaultValue="iesayala.ddns.net/deividjg"/>
+    <EditTextPreference
+        android:key="ficheroPHP"
+        android:title="Fichero PHP"
+        android:summary="Nombre fichero PHP"
+        android:defaultValue="php.php"/>
+    <EditTextPreference
+        android:key="sentenciaSQL"
+        android:title="Sentencia SQL"
+        android:summary="Indicar sentencia SQL"
+        android:defaultValue="SELECT * FROM ARTISTAS, ALBUMES WHERE ARTISTAS.ID_ARTISTA = ALBUMES.ID_ARTISTA_FK"/>
+</PreferenceScreen>
