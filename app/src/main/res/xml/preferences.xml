@@ -10,9 +10,4 @@
         android:title="Fichero PHP"
         android:summary="Nombre fichero PHP"
         android:defaultValue="php.php"/>
-    <EditTextPreference
-        android:key="sentenciaSQL"
-        android:title="Sentencia SQL"
-        android:summary="Indicar sentencia SQL"
-        android:defaultValue="SELECT * FROM ARTISTAS, ALBUMES WHERE ARTISTAS.ID_ARTISTA = ALBUMES.ID_ARTISTA_FK"/>
 </PreferenceScreen>

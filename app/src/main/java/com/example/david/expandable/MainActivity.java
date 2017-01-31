@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private String IP_Server, ficheroPHP, sentenciaSQL, url_consulta;
+    private String IP_Server, ficheroPHP, url_consulta;
     private JSONArray jSONArray;
     private JSONObject jsonObject;
     private DevuelveJSON devuelveJSON;
@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ExpandableListView expandableListView;
     private ExpandableListAdapter expandableListAdapter;
-    private List<String> expandableListTitle;
     private HashMap<String, List<String>> expandableListDetail;
     private ArrayList<String> cabeceras;
 
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         cargarPreferencias();
         url_consulta = "http://" + IP_Server + "/" + ficheroPHP;
         devuelveJSON = new DevuelveJSON();
@@ -77,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         protected JSONArray doInBackground(String... args) {
             try {
                 HashMap<String, String> parametrosPost = new HashMap<>();
-                parametrosPost.put("ins_sql", sentenciaSQL);
+                parametrosPost.put("ins_sql", "SELECT * FROM ARTISTAS, ALBUMES WHERE ARTISTAS.ID_ARTISTA = ALBUMES.ID_ARTISTA_FK");
                 jSONArray = devuelveJSON.sendRequest(url_consulta, parametrosPost);
                 if (jSONArray != null) {
                     return jSONArray;
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                         album.setAño(jsonObject.getInt("YEAR"));
                         album.setPortada(jsonObject.getString("PORTADA"));
                         arrayAlbumes.add(album);
-                        System.out.println(album.getArtista());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -127,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 rellenaExpandable();
-
             } else {
                 Toast.makeText(MainActivity.this, "JSON Array nulo", Toast.LENGTH_LONG).show();
             }
@@ -144,7 +140,11 @@ public class MainActivity extends AppCompatActivity {
         sp = getSharedPreferences("com.example.david.expandable_preferences", MODE_PRIVATE);
         IP_Server = sp.getString("ip","iesayala.ddns.net/deividjg");
         ficheroPHP = sp.getString("ficheroPHP", "php.php");
-        sentenciaSQL = sp.getString("sentenciaSQL", "SELECT * FROM ARTISTAS, ALBUMES WHERE ARTISTAS.ID_ARTISTA = ALBUMES.ID_ARTISTA_FK");
     }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+    };
 }
 
